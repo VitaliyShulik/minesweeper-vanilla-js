@@ -1,7 +1,7 @@
 
-version 0.1.0
+## version 0.1.0
 
-It is necessary to create an analogue of the Mines game.
+Аnalogue of the Mines game.
 
 Initial Functionality:
 
@@ -19,7 +19,7 @@ Additional functionality:
 - The ability to change the number of cells and mines;
 - Table with the results of the winnings.
 
-Необходимо создать аналог игры "Сапёр".
+Аналог игры "Сапёр".
 
 Начальный функционал:
 
