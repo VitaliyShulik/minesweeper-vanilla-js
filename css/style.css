@@ -23,7 +23,7 @@
 
 .game-canvas {
     margin: 20px auto;
-    padding: 10px 0 0 10px;
+    padding: 5px 0 0 5px;
     background-color: #55b4ff;
     justify-content: center;
 }
@@ -34,8 +34,21 @@
 .col {
     background-color: rgba(255, 255, 255, 0.6);
     text-align: center;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    height: 8vh;
-    width: 8vh;
-  }
+    margin-right: 5px;
+    margin-bottom: 5px;
+    height: 50px;
+    width: 50px;
+}
+
+.col:hover {
+    background-color: rgba(255, 255, 255, 0.8);;
+}
+
+.seaBomb {
+    background-image: url('../img/bomb.svg');
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.emptyCol{
+    background-color: rgba(255, 255, 255, 0.3);
+}

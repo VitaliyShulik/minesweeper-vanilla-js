@@ -5,7 +5,7 @@
 
 Initial Functionality:
 
-- 8 x 8 cells;
+- 8 x 8 cells; +
 - 10 mines in random order;
 - If there are no mines around the cell, open this space until mines appear next to other cells;
 - Display numbers in an empty place if there are mines or mines nearby;
