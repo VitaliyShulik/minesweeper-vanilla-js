@@ -16,17 +16,18 @@ function buildGameTable(rows, cols, maxMines) {
         
         // create row's cols
         for (let n = 0; n < cols; n++) {
-             let divCol = document.createElement("div");
-             divCol.setAttribute("class", "col");
-             divCol.addEventListener("click", clickOnCol);
-             let colId = "col-" + i + "-" + n;
-             divCol.setAttribute("id", colId);
-
-             divRow.appendChild(divCol);
-             
+            let divCol = document.createElement("div");
+            divCol.setAttribute("class", "col");
+            divCol.addEventListener("click", clickOnCol);
+            let colId = "col-" + i + "-" + n;
+            divCol.setAttribute("id", colId);
+            divRow.appendChild(divCol);
+            
+            // set or no set mine to col
             const mine = setMine(maxMines, counterMines);
             counterMines = mine.counter;
 
+            // adding col with properties to table object
             Object.assign(table, {[colId]: {
                  row: i,
                  col: n,
