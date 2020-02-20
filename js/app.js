@@ -38,12 +38,11 @@ function buildGameTable(rows, cols, maxMines) {
             }
         }
     addNieghbors(table);
-
     return table
 }
 
 function setMine(maxMines, counterMines) {
-    if (counterMines < maxMines && Math.random() > 0.75){
+    if (counterMines < maxMines && Math.random() > 0.8){
         counterMines++;
         return {
             counter: counterMines++,
@@ -54,7 +53,7 @@ function setMine(maxMines, counterMines) {
             counter: counterMines,
             isMine: false,
         }
-    }
+    } 
 }
 
 function setNeighbors(rows, cols, i, n) {
