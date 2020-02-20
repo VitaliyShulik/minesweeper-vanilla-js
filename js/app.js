@@ -36,12 +36,13 @@ function buildGameTable(rows, cols, maxMines) {
 
              divRow.appendChild(divCol);
              
-            const mine = setMine(maxMines, counterMines)
-            counterMines = mine.counter
+            const mine = setMine(maxMines, counterMines);
+            counterMines = mine.counter;
 
             Object.assign(table, {[colId]: {
                  row: i,
                  col: n,
+                 neighbors: setNeighbors(rows, cols, i, n),
                  haveMine: mine.isMine,
                  writable: false
              }});
@@ -50,7 +51,7 @@ function buildGameTable(rows, cols, maxMines) {
         return table
 }
 
-let table = buildGameTable(10, 10, 16);
+let table = buildGameTable(10, 10, 10);
 
 function setMine(maxMines, counterMines) {
     console.log(counterMines);
@@ -68,6 +69,110 @@ function setMine(maxMines, counterMines) {
     }
 }
 
+function setNeighbors(rows, cols, i, n) {
+    const lastNeighbrY = rows - 1;
+    const lastNeighbrX = cols - 1;
+    if (i > 0 && n > 0 && i < lastNeighbrY && n < lastNeighbrX){
+        return {
+            neighbor_1: {row: i - 1, col: n - 1},
+            neighbor_2: {row: i - 1, col: n},
+            neighbor_3: {row: i - 1, col: n + 1},
+            neighbor_4: {row: i, col: n - 1},
+            neighbor_5: {row: i, col: n + 1},        
+            neighbor_6: {row: i + 1, col: n - 1},
+            neighbor_7: {row: i + 1, col: n},
+            neighbor_8: {row: i + 1, col: n + 1}
+            }
+    } else if (i == 0 && n == 0 && i < lastNeighbrY && n < lastNeighbrX) {
+        return {
+            neighbor_1: "",
+            neighbor_2: "",
+            neighbor_3: "",
+            neighbor_4: "",
+            neighbor_5: {row: i, col: n + 1},        
+            neighbor_6: "",
+            neighbor_7: {row: i + 1, col: n},
+            neighbor_8: {row: i + 1, col: n + 1}
+            }
+    } else if (i == 0 && n > 0 && i < lastNeighbrY && n < lastNeighbrX) {
+        return {
+            neighbor_1: "",
+            neighbor_2: "",
+            neighbor_3: "",
+            neighbor_4: {row: i, col: n - 1},
+            neighbor_5: {row: i, col: n + 1},        
+            neighbor_6: {row: i + 1, col: n - 1},
+            neighbor_7: {row: i + 1, col: n},
+            neighbor_8: {row: i + 1, col: n + 1}
+            }
+    } else if (i == 0 && n > 0 && i < lastNeighbrY && n == lastNeighbrX){
+        return {
+            neighbor_1: "",
+            neighbor_2: "",
+            neighbor_3: "",
+            neighbor_4: {row: i, col: n - 1},
+            neighbor_5: "",        
+            neighbor_6: {row: i + 1, col: n - 1},
+            neighbor_7: {row: i + 1, col: n},
+            neighbor_8: ""
+            } 
+    } else if (i > 0 && n == 0 && i < lastNeighbrY && n < lastNeighbrX) {
+        return {
+            neighbor_1: "",
+            neighbor_2: {row: i - 1, col: n},
+            neighbor_3: {row: i - 1, col: n + 1},
+            neighbor_4: "",
+            neighbor_5: {row: i, col: n + 1},        
+            neighbor_6: "",
+            neighbor_7: {row: i + 1, col: n},
+            neighbor_8: {row: i + 1, col: n + 1}
+            }
+    } else if (i > 0 && n == 0 && i == lastNeighbrY && n < lastNeighbrX) {
+        return {
+            neighbor_1: "",
+            neighbor_2: {row: i - 1, col: n},
+            neighbor_3: {row: i - 1, col: n + 1},
+            neighbor_4: "",
+            neighbor_5: {row: i, col: n + 1},        
+            neighbor_6: "",
+            neighbor_7: "",
+            neighbor_8: ""
+            }
+    } else if (i > 0 && n > 0 && i < lastNeighbrY && n == lastNeighbrX) {
+        return {
+            neighbor_1: {row: i - 1, col: n - 1},
+            neighbor_2: {row: i - 1, col: n},
+            neighbor_3: "",
+            neighbor_4: {row: i, col: n - 1},
+            neighbor_5: "",        
+            neighbor_6: {row: i + 1, col: n - 1},
+            neighbor_7: {row: i + 1, col: n},
+            neighbor_8: ""
+            }
+    } else if (i > 0 && n > 0 && i == lastNeighbrY && n < lastNeighbrX) {
+        return {
+            neighbor_1: {row: i - 1, col: n - 1},
+            neighbor_2: {row: i - 1, col: n},
+            neighbor_3: {row: i - 1, col: n + 1},
+            neighbor_4: {row: i, col: n - 1},
+            neighbor_5: {row: i, col: n + 1},        
+            neighbor_6: "",
+            neighbor_7: "",
+            neighbor_8: ""
+            }
+    } else if (i > 0 && n > 0 && i == lastNeighbrY && n == lastNeighbrX) {
+        return {
+            neighbor_1: {row: i - 1, col: n - 1},
+            neighbor_2: {row: i - 1, col: n},
+            neighbor_3: "",
+            neighbor_4: {row: i, col: n - 1},
+            neighbor_5: "",        
+            neighbor_6: "",
+            neighbor_7: "",
+            neighbor_8: ""
+            }
+    }
+}
 
 console.log('CURRENT GAME TABLE', table);
 
@@ -76,7 +181,7 @@ function clickOnCol(event){
     let colElement = document.getElementById(colId);
     console.log(table[colId].haveMine);
     if (table[colId].haveMine == true){
-        colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+        colElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
         colElement.style.backgroundImage = "url('./img/bomb.svg')";
     } else {
         colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
