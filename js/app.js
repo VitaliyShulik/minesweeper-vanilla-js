@@ -1,15 +1,3 @@
-// class GameTable { 
-//     constructor(row, col, minesCount){
-//         this.row = row;
-//         this.col = col;
-//         this.minesCount = minesCount
-//     }
-// }
-
-// const start = function startGame(){
-
-// }
-
 function buildGameTable(rows, cols, maxMines) {
     let table = {};
     let gameTableElement = document.getElementById("gameTable");
@@ -48,13 +36,12 @@ function buildGameTable(rows, cols, maxMines) {
              }});
             }
         }
-        return table
+    addNieghbors(table);
+
+    return table
 }
 
-let table = buildGameTable(10, 10, 10);
-
 function setMine(maxMines, counterMines) {
-    console.log(counterMines);
     if (counterMines < maxMines && Math.random() > 0.75){
         counterMines++;
         return {
@@ -70,9 +57,9 @@ function setMine(maxMines, counterMines) {
 }
 
 function setNeighbors(rows, cols, i, n) {
-    const lastNeighbrY = rows - 1;
-    const lastNeighbrX = cols - 1;
-    if (i > 0 && n > 0 && i < lastNeighbrY && n < lastNeighbrX){
+    const lastNeighborY = rows - 1;
+    const lastNeighborX = cols - 1;
+    if (i > 0 && n > 0 && i < lastNeighborY && n < lastNeighborX){
         return {
             neighbor_1: {row: i - 1, col: n - 1},
             neighbor_2: {row: i - 1, col: n},
@@ -83,7 +70,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: {row: i + 1, col: n},
             neighbor_8: {row: i + 1, col: n + 1}
             }
-    } else if (i == 0 && n == 0 && i < lastNeighbrY && n < lastNeighbrX) {
+    } else if (i == 0 && n == 0 && i < lastNeighborY && n < lastNeighborX) {
         return {
             neighbor_1: "",
             neighbor_2: "",
@@ -94,7 +81,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: {row: i + 1, col: n},
             neighbor_8: {row: i + 1, col: n + 1}
             }
-    } else if (i == 0 && n > 0 && i < lastNeighbrY && n < lastNeighbrX) {
+    } else if (i == 0 && n > 0 && i < lastNeighborY && n < lastNeighborX) {
         return {
             neighbor_1: "",
             neighbor_2: "",
@@ -105,7 +92,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: {row: i + 1, col: n},
             neighbor_8: {row: i + 1, col: n + 1}
             }
-    } else if (i == 0 && n > 0 && i < lastNeighbrY && n == lastNeighbrX){
+    } else if (i == 0 && n > 0 && i < lastNeighborY && n == lastNeighborX){
         return {
             neighbor_1: "",
             neighbor_2: "",
@@ -116,7 +103,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: {row: i + 1, col: n},
             neighbor_8: ""
             } 
-    } else if (i > 0 && n == 0 && i < lastNeighbrY && n < lastNeighbrX) {
+    } else if (i > 0 && n == 0 && i < lastNeighborY && n < lastNeighborX) {
         return {
             neighbor_1: "",
             neighbor_2: {row: i - 1, col: n},
@@ -127,7 +114,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: {row: i + 1, col: n},
             neighbor_8: {row: i + 1, col: n + 1}
             }
-    } else if (i > 0 && n == 0 && i == lastNeighbrY && n < lastNeighbrX) {
+    } else if (i > 0 && n == 0 && i == lastNeighborY && n < lastNeighborX) {
         return {
             neighbor_1: "",
             neighbor_2: {row: i - 1, col: n},
@@ -138,7 +125,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: "",
             neighbor_8: ""
             }
-    } else if (i > 0 && n > 0 && i < lastNeighbrY && n == lastNeighbrX) {
+    } else if (i > 0 && n > 0 && i < lastNeighborY && n == lastNeighborX) {
         return {
             neighbor_1: {row: i - 1, col: n - 1},
             neighbor_2: {row: i - 1, col: n},
@@ -149,7 +136,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: {row: i + 1, col: n},
             neighbor_8: ""
             }
-    } else if (i > 0 && n > 0 && i == lastNeighbrY && n < lastNeighbrX) {
+    } else if (i > 0 && n > 0 && i == lastNeighborY && n < lastNeighborX) {
         return {
             neighbor_1: {row: i - 1, col: n - 1},
             neighbor_2: {row: i - 1, col: n},
@@ -160,7 +147,7 @@ function setNeighbors(rows, cols, i, n) {
             neighbor_7: "",
             neighbor_8: ""
             }
-    } else if (i > 0 && n > 0 && i == lastNeighbrY && n == lastNeighbrX) {
+    } else if (i > 0 && n > 0 && i == lastNeighborY && n == lastNeighborX) {
         return {
             neighbor_1: {row: i - 1, col: n - 1},
             neighbor_2: {row: i - 1, col: n},
@@ -174,16 +161,102 @@ function setNeighbors(rows, cols, i, n) {
     }
 }
 
-console.log('CURRENT GAME TABLE', table);
+function addNieghbors(table) {
+    for (const x in table){
+        let counterNierhbors = 0;
+        let xNeighbors = table[x].neighbors;
+        for (const k in xNeighbors){
+            let nowNeighbors = xNeighbors[k];
+            let row = nowNeighbors.row;
+            let col = nowNeighbors.col;
+            let haveMine = checkMine(row, col, table);
+            if (nowNeighbors == ""){
+                continue;
+            } else if (haveMine){
+                counterNierhbors++;
+            }
+        
+        }
+        Object.assign(table[x], {amountNeighborsWithMine: counterNierhbors});
+    }
+ 
+}
+
+function checkMine(row, col, table) {
+    let neighbor = findNeigbor(row, col, table);
+    return neighbor.haveMine;
+}
+
+function findNeigbor(row, col, table) {
+    let neighbor = "";
+    for (const k in table){
+        if (table[k].row == row && table[k].col == col){
+            neighbor = table[k];
+        }
+    }
+    return neighbor;
+    
+}
 
 function clickOnCol(event){
     let colId = event.target.id;
     let colElement = document.getElementById(colId);
-    console.log(table[colId].haveMine);
-    if (table[colId].haveMine == true){
+    let haveMine = table[colId].haveMine;
+    let amountNeighborsWithMine = table[colId].amountNeighborsWithMine;
+    if (haveMine){
         colElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
         colElement.style.backgroundImage = "url('./img/bomb.svg')";
+    } else if(!haveMine && amountNeighborsWithMine > 0){
+        switch(amountNeighborsWithMine){
+            case 1:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/1.png')";
+                break;
+            case 2:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/2.png')";
+                break;        
+            case 3:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/3.png')";
+                break;
+            case 4:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/4.png')";
+                break; 
+            case 5:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/5.png')";
+                break;
+            case 6:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/6.png')";
+                break;        
+            case 7:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/7.png')";
+                break;
+            case 8:
+                colElement.style.backgroundSize = "contain";
+                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+                colElement.style.backgroundImage = "url('./img/8.png')";
+                break;
+            default:
+                break;   
+        }
+
     } else {
         colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
     }
 }
+
+let table = buildGameTable(10, 10, 16);
+
+
