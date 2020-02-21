@@ -207,7 +207,8 @@ function clickOnCol(event){
     if (haveMine){
         colElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
         colElement.style.backgroundImage = "url('./img/bomb.svg')";
-        table[colId].isOpen = true;      
+        table[colId].isOpen = true;
+        gameOver();      
     } else if(!haveMine && amountNeighborsWithMine > 0){
         getNumberToCol(amountNeighborsWithMine, colElement);
         table[colId].isOpen = true;
@@ -225,30 +226,54 @@ function getNumberToCol(amountNeighborsWithMine, colElement){
 
 function checkNeighborsWithNeighborsWithMine(table, colId) {
     let neighbors = table[colId].neighbors;
+    let neighbor_1 = neighbors.neighbor_1;
     let neighbor_2 = neighbors.neighbor_2;
+    let neighbor_3 = neighbors.neighbor_3;
     let neighbor_4 = neighbors.neighbor_4;
     let neighbor_5 = neighbors.neighbor_5;
+    let neighbor_6 = neighbors.neighbor_6;
     let neighbor_7 = neighbors.neighbor_7;
-    if (neighbor_2 != ""){
-        let row = neighbor_2.row;
-        let col = neighbor_2.col;
-        workOnNeighbor(row, col, table);
-    }
-    if (neighbor_4 != ""){
-        let row = neighbor_4.row;
-        let col = neighbor_4.col;
-        workOnNeighbor(row, col, table);
-    }
-    if (neighbor_5 != ""){
-        let row = neighbor_5.row;
-        let col = neighbor_5.col;
-        workOnNeighbor(row, col, table);
-    }
-    if (neighbor_7 != ""){
-        let row = neighbor_7.row;
-        let col = neighbor_7.col;
-        workOnNeighbor(row, col, table);
-    }
+    let neighbor_8 = neighbors.neighbor_8;
+        if (neighbor_1 != ""){
+            let row = neighbor_1.row;
+            let col = neighbor_1.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_2 != ""){
+            let row = neighbor_2.row;
+            let col = neighbor_2.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_3 != ""){
+            let row = neighbor_3.row;
+            let col = neighbor_3.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_4 != ""){
+            let row = neighbor_4.row;
+            let col = neighbor_4.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_5 != ""){
+            let row = neighbor_5.row;
+            let col = neighbor_5.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_6 != ""){
+            let row = neighbor_6.row;
+            let col = neighbor_6.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_7 != ""){
+            let row = neighbor_7.row;
+            let col = neighbor_7.col;
+            workOnNeighbor(row, col, table);
+        }
+        if (neighbor_8 != ""){
+            let row = neighbor_8.row;
+            let col = neighbor_8.col;
+            workOnNeighbor(row, col, table);
+        }
 
 }
 
@@ -272,6 +297,35 @@ function openEmptyCol(colElement, colId, table){
 }
 
 
-let table = buildGameTable(10, 10, 16);
+var table = buildGameTable(10, 10, 16);
 
+function restartGame() {
+    removeGameTable();
+    table = buildGameTable(10, 10, 16);
+     
+}
 
+function removeGameTable() {
+    let gameTable = document.getElementById('gameTable');
+    gameTable.innerHTML = "";
+    gameTable.style.webkitFilter = "blur(.0em)";
+
+}
+
+function gameOver() {
+    let gameTable = document.getElementById('gameTable');
+    gameTable.style.webkitFilter = "blur(.05em)";
+    for (x in table){
+        let colId = x;
+        let haveMine = table[x].haveMine;
+        let isOpen = table[x].isOpen;
+        let colElement = document.getElementById(colId);
+        colElement.removeEventListener("click", clickOnCol);
+        if (haveMine && !isOpen){
+            colElement.style.backgroundImage = "url('./img/bomb.svg')";
+            colElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        } else if (!isOpen){
+            colElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        }
+    }
+}
