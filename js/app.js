@@ -33,6 +33,7 @@ function buildGameTable(rows, cols, maxMines) {
                  col: n,
                  neighbors: setNeighbors(rows, cols, i, n),
                  haveMine: mine.isMine,
+                 isOpen: false,
                  writable: false
              }});
             }
@@ -206,56 +207,70 @@ function clickOnCol(event){
     if (haveMine){
         colElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
         colElement.style.backgroundImage = "url('./img/bomb.svg')";
+        table[colId].isOpen = true;      
     } else if(!haveMine && amountNeighborsWithMine > 0){
-        switch(amountNeighborsWithMine){
-            case 1:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/1.png')";
-                break;
-            case 2:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/2.png')";
-                break;        
-            case 3:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/3.png')";
-                break;
-            case 4:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/4.png')";
-                break; 
-            case 5:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/5.png')";
-                break;
-            case 6:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/6.png')";
-                break;        
-            case 7:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/7.png')";
-                break;
-            case 8:
-                colElement.style.backgroundSize = "contain";
-                colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-                colElement.style.backgroundImage = "url('./img/8.png')";
-                break;
-            default:
-                break;   
-        }
-
+        getNumberToCol(amountNeighborsWithMine, colElement);
+        table[colId].isOpen = true;
     } else {
-        colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+        openEmptyCol(colElement, colId, table);
     }
 }
+
+function getNumberToCol(amountNeighborsWithMine, colElement){
+    let urlImg = "url('./img/" + amountNeighborsWithMine + ".png')"
+    colElement.style.backgroundSize = "contain";
+    colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+    colElement.style.backgroundImage = urlImg;
+}
+
+function checkNeighborsWithNeighborsWithMine(table, colId) {
+    let neighbors = table[colId].neighbors;
+    let neighbor_2 = neighbors.neighbor_2;
+    let neighbor_4 = neighbors.neighbor_4;
+    let neighbor_5 = neighbors.neighbor_5;
+    let neighbor_7 = neighbors.neighbor_7;
+    if (neighbor_2 != ""){
+        let row = neighbor_2.row;
+        let col = neighbor_2.col;
+        workOnNeighbor(row, col, table);
+    }
+    if (neighbor_4 != ""){
+        let row = neighbor_4.row;
+        let col = neighbor_4.col;
+        workOnNeighbor(row, col, table);
+    }
+    if (neighbor_5 != ""){
+        let row = neighbor_5.row;
+        let col = neighbor_5.col;
+        workOnNeighbor(row, col, table);
+    }
+    if (neighbor_7 != ""){
+        let row = neighbor_7.row;
+        let col = neighbor_7.col;
+        workOnNeighbor(row, col, table);
+    }
+
+}
+
+function workOnNeighbor(row, col, table) {
+    let colId = "col-" + row + "-" + col;
+    let colElement = document.getElementById(colId);
+    let neighbor = findNeigbor(row, col, table);
+    let amountNeighborsWithMine = neighbor.amountNeighborsWithMine;
+    let isOpen = table[colId].isOpen;
+    if (amountNeighborsWithMine != 0){
+        getNumberToCol(amountNeighborsWithMine, colElement);
+        table[colId].isOpen = true;
+    } else if (amountNeighborsWithMine == 0 && !isOpen){
+        openEmptyCol(colElement, colId, table);
+    }
+}
+function openEmptyCol(colElement, colId, table){
+    colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+    table[colId].isOpen = true;
+    checkNeighborsWithNeighborsWithMine(table, colId);
+}
+
 
 let table = buildGameTable(10, 10, 16);
 
