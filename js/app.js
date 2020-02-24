@@ -267,11 +267,11 @@ function openEmptyCol(colElement, colId, table){
 }
 
 
-var table = buildGameTable(10, 10, 5);
+var table = buildGameTable(8, 8, 10);
 
 function restartGame() {
     removeGameTable();
-    table = buildGameTable(10, 10, 5);
+    table = buildGameTable(8, 8, 10);
      
 }
 
