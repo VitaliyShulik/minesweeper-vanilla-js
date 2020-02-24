@@ -1,5 +1,5 @@
 
-## version 0.4.2
+## version 0.5.0
 
 Аnalogue of the Mines game.
 
@@ -9,8 +9,9 @@ Initial Functionality:
 - 16 mines in random order; +
 - If there are no mines around the cell, open this space until mines appear next to other cells; +
 - Display numbers in an empty place if there are mine or mines nearby; +
-- The ability of the player to mark the approximate location of mines, and when double-clicked so that the cell additionally displays the question
+- The ability of the player to mark the approximate location of mines, and when double-clicked so that the cell additionally displays the question; +
 - Game Over. +
+- Game Win. +
 
 Additional functionality:
 
@@ -30,8 +31,9 @@ Additional functionality:
 пока рядом с другими ячейками не появятся мины; +
 - Отображать цифры в пустом месте, если рядом есть мина или мины; +
 - Возможность игрока помечать примерное расположение мин, 
-а при двойном нажатии чтобы ячейка дополнительно отображала вопрос
+а при двойном нажатии чтобы ячейка дополнительно отображала вопрос; +
 - Игра проиграна. + 
+- Игра выйграна. +
 
 Дополнительный функционал:
 - Пауза;
