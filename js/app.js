@@ -26,7 +26,7 @@ function buildGameTable(rows, cols, maxMines) {
             divRow.appendChild(divCol);
             
             // set or no set mine to col
-            const mine = setMine(maxMines, table, tableCols);
+            const mine = setMine(maxMines, table);
             table.counterMines = mine.counter;
 
             // adding col with properties to table object
@@ -36,6 +36,7 @@ function buildGameTable(rows, cols, maxMines) {
                  neighbors: setNeighbors(rows, cols, i, n),
                  haveMine: mine.isMine,
                  isOpen: false,
+                 haveFlag: false,
                  writable: false
              }});
             }
@@ -214,11 +215,15 @@ function clickOnCol(event){
         table.tableCols[colId].isOpen = true;
         gameOver();      
     } else if(!haveMine && amountNeighborsWithMine > 0){
-        getNumberToCol(amountNeighborsWithMine, colElement);
+        getNumberToCol(amountNeighborsWithMine, colElement, colId);
         table.tableCols[colId].isOpen = true;
     } else {
         openEmptyCol(colElement, colId, table);
     }
+    table.counterFlags = checkAndAddNumberCollsWithFlag();
+    let counterFlagsSpan = document.getElementById("counter-flags");
+    counterFlagsSpan.innerHTML = table.counterFlags;
+
     let amountOpenedCols = checkAmountOpenedCols();
     let amountCols = table.amountCols;
     let amountClosedCols = amountCols - amountOpenedCols;
@@ -227,7 +232,7 @@ function clickOnCol(event){
     }
 }
 
-function getNumberToCol(amountNeighborsWithMine, colElement){
+function getNumberToCol(amountNeighborsWithMine, colElement, colId){
     let urlImg = "url('./img/" + amountNeighborsWithMine + ".png')"
     colElement.style.backgroundSize = "cover";
     colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
@@ -255,6 +260,7 @@ function workOnNeighbor(row, col, table) {
     if (amountNeighborsWithMine != 0){
         getNumberToCol(amountNeighborsWithMine, colElement);
         table.tableCols[colId].isOpen = true;
+        table.tableCols[colId].haveFlag = false;
     } else if (amountNeighborsWithMine == 0 && !isOpen){
         openEmptyCol(colElement, colId, table);
     }
@@ -262,6 +268,8 @@ function workOnNeighbor(row, col, table) {
 function openEmptyCol(colElement, colId, table){
     colElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
     table.tableCols[colId].isOpen = true;
+    table.tableCols[colId].haveFlag = false;
+    colElement.style.backgroundImage = '';
     colElement.removeEventListener("contextmenu", rightClickOnCol, false);
     checkNeighborsWithNeighborsWithMine(table, colId);
 }
@@ -277,6 +285,8 @@ function restartGame() {
 
 function removeGameTable() {
     let gameTable = document.getElementById('gameTable');
+    let elementCounterFlags = document.getElementById('counter-flags');
+    elementCounterFlags.innerHTML = 0;
     gameTable.innerHTML = "";
     gameTable.style.webkitFilter = "blur(.0em)";
 
@@ -308,26 +318,35 @@ function rightClickOnCol(e) {
     let colElement = document.getElementById(colId);
     
     let haveFlag = table.tableCols[colId].haveFlag;
-    let counterFlagsSpan = document.getElementById("counter-flags");
     if (!haveFlag && table.counterFlags < table.counterMines){
         colElement.removeEventListener("click", clickOnCol);
         colElement.style.backgroundSize = "cover";
         colElement.style.backgroundImage = "url('./img/flag.png')";
         table.tableCols[colId].haveFlag = true;
-        table.counterFlags++;
-        counterFlagsSpan.innerHTML = table.counterFlags;
     } else if (haveFlag){
         colElement.addEventListener("click", clickOnCol);
         colElement.style.backgroundSize = "";
         colElement.style.backgroundImage = "";
         table.tableCols[colId].haveFlag = false;
-        table.counterFlags--;
-        counterFlagsSpan.innerHTML = table.counterFlags;
     }
-    if (checkColsWithFlag()){
+    table.counterFlags = checkAndAddNumberCollsWithFlag();
+    let counterFlagsSpan = document.getElementById("counter-flags");
+    counterFlagsSpan.innerHTML = table.counterFlags;
+    if (checkColsWithFlagsAndMines()){
         win()
     }
 
+}
+
+function checkAndAddNumberCollsWithFlag() {
+    let counterFlags = 0;
+    for (cols in table.tableCols){
+        if (table.tableCols[cols].haveFlag){
+            counterFlags++;
+        }
+    }
+    table.counterFlags = counterFlags;
+    return table.counterFlags
 }
 
 function checkAmountOpenedCols() {
@@ -359,7 +378,7 @@ function win() {
     }
 }
 
-function checkColsWithFlag(){
+function checkColsWithFlagsAndMines(){
     let counterColsWithFlagAndMines = 0;
     for (cols in table.tableCols){
         if (table.tableCols[cols].haveFlag && table.tableCols[cols].haveMine){
