@@ -1,5 +1,5 @@
 
-## version 0.5.1
+## version 0.5.2
 
 Аnalogue of the Mines game.
 

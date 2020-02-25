@@ -24,17 +24,13 @@ function buildGameTable(rows, cols, maxMines) {
             let colId = "col-" + i + "-" + n;
             divCol.setAttribute("id", colId);
             divRow.appendChild(divCol);
-            
-            // set or no set mine to col
-            const mine = setMine(maxMines, table);
-            table.counterMines = mine.counter;
 
             // adding col with properties to table object
             Object.assign(tableCols, {[colId]: {
                  row: i,
                  col: n,
                  neighbors: setNeighbors(rows, cols, i, n),
-                 haveMine: mine.isMine,
+                 haveMine: false,
                  isOpen: false,
                  haveFlag: false,
                  writable: false
@@ -42,24 +38,23 @@ function buildGameTable(rows, cols, maxMines) {
             }
     }
     table.tableCols = tableCols;
+
+    while (table.counterMines != maxMines) {
+        setMine(maxMines, table);
+    }
     addNieghbors(table);
     return table
 }
 
 function setMine(maxMines, table) {
-    let counterMines = table.counterMines;
-    if (counterMines < maxMines && Math.random() > 0.8){
-        counterMines++;
-        return {
-            counter: counterMines++,
-            isMine: true,
-        }
-    } else {
-        return {
-            counter: counterMines,
-            isMine: false,
+    for (cols in table.tableCols){
+        let colObject = table.tableCols[cols];
+        if (table.counterMines < maxMines && Math.random() > 0.98 && !colObject.haveMine){
+            table.counterMines++;
+            colObject.haveMine = true;
         }
     } 
+     
 }
 
 function setNeighbors(rows, cols, i, n) {
