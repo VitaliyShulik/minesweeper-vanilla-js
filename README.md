@@ -1,5 +1,5 @@
 
-## version 0.5.2
+## version 0.5.3
 
 Аnalogue of the Mines game.
 
@@ -15,11 +15,11 @@ Initial Functionality:
 
 Additional functionality:
 
-- Pause;
-- Time counter;
+- Time counter; +
 - Game restart button; +
 - The ability to change the number of cells and mines;
-- Table with the results of the winnings.
+- Table with the results of the winnings;
+- Adaptive layout.
 
 Аналог игры "Сапёр".
 
@@ -36,8 +36,9 @@ Additional functionality:
 - Игра выйграна. +
 
 Дополнительный функционал:
-- Пауза;
-- Счетчик отсчета времени;
+
+- Счетчик отсчета времени; +
 - Кнопка перезагрузки игры; +
 - Возможность изменения количества ячеек и мин;
-- Таблица с результатами выйгрышей.
+- Таблица с результатами выйгрышей;
+- Адаптивная верстка.

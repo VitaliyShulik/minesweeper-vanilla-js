@@ -1,6 +1,6 @@
 function buildGameTable(rows, cols, maxMines) {
     let tableCols = {};
-    let table = {counterMines:0, counterFlags:0, amountCols: rows * cols};
+    let table = {counterMines:0, counterFlags:0, amountCols: rows * cols, timeCounterIsStart: false};
     let gameTableElement = document.getElementById("gameTable");
     document.getElementById("amount-mines").innerHTML = maxMines;
     
@@ -200,6 +200,7 @@ function findNeigbor(row, col, table) {
 }
 
 function clickOnCol(event){
+    if (!table.timeCounterIsStart){startTimer()}
     let colId = event.target.id;
     let colElement = document.getElementById(colId);
     let haveMine = table.tableCols[colId].haveMine;
@@ -223,7 +224,7 @@ function clickOnCol(event){
     let amountCols = table.amountCols;
     let amountClosedCols = amountCols - amountOpenedCols;
     if (amountClosedCols == table.counterMines){
-        win()
+        won()
     }
 }
 
@@ -275,7 +276,13 @@ var table = buildGameTable(8, 8, 10);
 function restartGame() {
     removeGameTable();
     table = buildGameTable(8, 8, 10);
-     
+    stopTimer();
+    let secondsElement = document.getElementById('seconds');
+    let minutesElement = document.getElementById('minutes');
+    let hoursElement = document.getElementById('hours');
+    secondsElement.innerHTML = "00";
+    minutesElement.innerHTML = "00";
+    hoursElement.innerHTML = "00";
 }
 
 function removeGameTable() {
@@ -304,10 +311,12 @@ function gameOver() {
             colElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
         }
     }
+    stopTimer();
 }
 
 
 function rightClickOnCol(e) {
+    if (!table.timeCounterIsStart){startTimer()}
     e.preventDefault();
     let colId = event.target.id;
     let colElement = document.getElementById(colId);
@@ -328,7 +337,7 @@ function rightClickOnCol(e) {
     let counterFlagsSpan = document.getElementById("counter-flags");
     counterFlagsSpan.innerHTML = table.counterFlags;
     if (checkColsWithFlagsAndMines()){
-        win()
+        won()
     }
 
 }
@@ -354,7 +363,7 @@ function checkAmountOpenedCols() {
     return amountOpenedCols
 }
 
-function win() {
+function won() {
     let gameTable = document.getElementById('gameTable');
     gameTable.style.webkitFilter = "blur(.05em)";
     for (x in table.tableCols){
@@ -371,6 +380,7 @@ function win() {
             colElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
         }
     }
+    stopTimer();
 }
 
 function checkColsWithFlagsAndMines(){
@@ -381,4 +391,60 @@ function checkColsWithFlagsAndMines(){
         }
     }
     return counterColsWithFlagAndMines == table.counterMines
+}
+
+var interval; 
+
+function startTimer(){
+    let timeCounter = 1;
+    let secondsElement = document.getElementById('seconds');
+    let minutesElement = document.getElementById('minutes');
+    let hoursElement = document.getElementById('hours');
+    secondsElement.innerHTML = "00";
+    minutesElement.innerHTML = "00";
+    hoursElement.innerHTML = "00";
+    let seconds, minutes, hours = 0;
+    table.timeCounterIsStart = true;
+    interval = setInterval(() => {
+        if (timeCounter < 60){
+            seconds = timeCounter;
+            if (seconds < 10){
+                seconds = "0" + seconds;
+            }
+            secondsElement.innerHTML = seconds;
+        } else if (timeCounter >=60 && timeCounter < 3600){
+            seconds = timeCounter % 60;
+            if (seconds < 10){
+                seconds = "0" + seconds;
+            }
+            minutes = Math.floor(timeCounter / 60);
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            secondsElement.innerHTML = seconds;
+            minutesElement.innerHTML = minutes;
+        } else if (timeCounter >= 3600){
+            seconds = timeCounter % 60;
+            if (seconds < 10){
+                seconds = "0" + seconds;
+            }
+            minutes = Math.floor(timeCounter % 60 / 60);
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            hours = Math.floor(timeCounter / 60);
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+            secondsElement.innerHTML = seconds;
+            minutesElement.innerHTML = minutes;
+            hoursElement.innerHTML = hours;
+        }
+        timeCounter++
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(interval);
+    table.timeCounterIsStart = false;
 }
