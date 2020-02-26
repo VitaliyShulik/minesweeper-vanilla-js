@@ -31,7 +31,7 @@
     display: flex;
     flex-wrap: nowrap;
 }
-.col {
+.cell {
     background-color: rgba(255, 255, 255, 0.6);
     text-align: center;
     margin-right: 5px;
@@ -40,7 +40,7 @@
     width: 50px;
 }
 
-.col:hover {
+.cell:hover {
     background-color: rgba(255, 255, 255, 0.8);;
 }
 
