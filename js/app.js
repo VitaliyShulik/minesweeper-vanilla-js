@@ -4,6 +4,23 @@ var cols = 8;
 var maxMines = 10; 
 var table = buildGameTable(rows, cols, maxMines);
 
+var touchStartTimeStamp = 0;
+var touchEndTimeStamp   = 0;
+
+var timer;
+
+function onTouchStart(e) {
+    touchStartTimeStamp = e.timeStamp;
+}
+
+function onTouchEnd(e) {
+    touchEndTimeStamp = e.timeStamp;
+
+    if (touchEndTimeStamp - touchStartTimeStamp > 500){
+        rightClickOnCell(e);
+    }
+}
+
 function buildGameTable(rows, cols, maxMines) {
     let tableCells = {};
     let table = {counterMines:0, counterFlags:0, amountCells: rows * cols, timeCounterIsStart: false};
@@ -27,6 +44,8 @@ function buildGameTable(rows, cols, maxMines) {
             divCell.setAttribute("class", "cell");
             divCell.addEventListener("click", clickOnCell);
             divCell.addEventListener("contextmenu", rightClickOnCell, false);
+            divCell.addEventListener('touchstart', onTouchStart,false);
+            divCell.addEventListener('touchend', onTouchEnd,false);
             let cellId = "cell-" + i + "-" + n;
             divCell.setAttribute("id", cellId);
             divRow.appendChild(divCell);
@@ -245,6 +264,8 @@ function getNumberToCell(amountNeighborsWithMine, cellElement){
     cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
     cellElement.style.backgroundImage = urlImg;
     cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
+    cellElement.removeEventListener('touchstart', onTouchStart,false);
+    cellElement.removeEventListener('touchend', onTouchEnd,false);
 }
 
 function openEmptyCell(cellElement, cellId, table){
@@ -253,6 +274,8 @@ function openEmptyCell(cellElement, cellId, table){
     table.tableCells[cellId].haveFlag = false;
     cellElement.style.backgroundImage = '';
     cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
+    cellElement.removeEventListener('touchstart', onTouchStart,false);
+    cellElement.removeEventListener('touchend', onTouchEnd,false);
     checkNeighborsWithNeighborsWithMine(table, cellId);
 }
 
@@ -322,6 +345,8 @@ function gameOver() {
         let cellElement = document.getElementById(cellId);
         cellElement.removeEventListener("click", clickOnCell);
         cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
+        cellElement.removeEventListener('touchstart', onTouchStart,false);
+        cellElement.removeEventListener('touchend', onTouchEnd,false);
         if (haveMine && !isOpen){
             cellElement.style.backgroundImage = "url('./img/bomb.svg')";
             cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
@@ -387,6 +412,8 @@ function openAllCells(x) {
         let cellElement = document.getElementById(cellId);
         cellElement.removeEventListener("click", clickOnCell);
         cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
+        cellElement.removeEventListener('touchstart', onTouchStart,false);
+        cellElement.removeEventListener('touchend', onTouchEnd,false);
         if (haveMine && !isOpen){
             cellElement.style.backgroundImage = "url('./img/bomb.svg')";
             cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
