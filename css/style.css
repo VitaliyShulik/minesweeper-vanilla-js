@@ -2,7 +2,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -user-select: all;
     -webkit-user-select: none;
+    -webkit-user-select: text;
     -moz-user-select: none;
     -ms-user-select: none;
 }
@@ -29,9 +31,6 @@
     padding: 5px 0 0 5px;
     background-color: #55b4ff;
     justify-content: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
 }
 .row {
     display: flex;
