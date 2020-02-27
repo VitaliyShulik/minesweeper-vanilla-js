@@ -30,6 +30,7 @@
 .row {
     display: flex;
     flex-wrap: nowrap;
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-user-select: text;
     -moz-user-select: none;
@@ -42,6 +43,7 @@
     margin-bottom: 5px;
     height: 50px;
     width: 50px;
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-user-select: text;
     -moz-user-select: none;
