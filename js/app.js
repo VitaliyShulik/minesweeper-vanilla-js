@@ -1,6 +1,8 @@
 ////// Module game building
-
-var table = buildGameTable(8, 8, 5);
+var rows = 8;
+var cols = 8;
+var maxMines = 10; 
+var table = buildGameTable(rows, cols, maxMines);
 
 function buildGameTable(rows, cols, maxMines) {
     let tableCells = {};
@@ -217,7 +219,7 @@ function clickOnCell(event){
 
     let haveMine = table.tableCells[cellId].haveMine;
     let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
-    
+
     if (haveMine){
         cellElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
         cellElement.style.backgroundImage = "url('./img/bomb.svg')";
@@ -296,7 +298,7 @@ function checkamountOpenedCells() {
 
 function restartGame() {
     removeGameTable();
-    table = buildGameTable(8, 8, 5);
+    table = buildGameTable(rows, cols, maxMines);
     stopTimer();
     resetTimeCounter();
 }
@@ -444,11 +446,11 @@ function startTimer(){
             if (seconds < 10){
                 seconds = "0" + seconds;
             }
-            minutes = Math.floor(timeCounter % 60 / 60);
+            minutes = Math.floor(timeCounter / 60 % 60);
             if (minutes < 10) {
                 minutes = "0" + minutes;
             }
-            hours = Math.floor(timeCounter / 60);
+            hours = Math.floor(timeCounter / 3600);
             if (hours < 10) {
                 hours = "0" + hours;
             }
