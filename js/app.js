@@ -1,25 +1,9 @@
-////// Module game building
+///////// Module game building
+
 var rows = 8;
 var cols = 8;
 var maxMines = 10; 
 var table = buildGameTable(rows, cols, maxMines);
-
-var touchStartTimeStamp = 0;
-var touchEndTimeStamp   = 0;
-
-var timer;
-
-function onTouchStart(e) {
-    touchStartTimeStamp = e.timeStamp;
-}
-
-function onTouchEnd(e) {
-    touchEndTimeStamp = e.timeStamp;
-
-    if (touchEndTimeStamp - touchStartTimeStamp > 500){
-        rightClickOnCell(e);
-    }
-}
 
 function buildGameTable(rows, cols, maxMines) {
     let tableCells = {};
@@ -224,11 +208,11 @@ function findNeigbor(row, col, table) {
     
 }
 
-//////////
+/////////
 
 ///////// Module Actions
 
-// Left click
+//// Left click
 
 function clickOnCell(event){
     let cellId = event.target.id;
@@ -240,8 +224,7 @@ function clickOnCell(event){
     let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
 
     if (haveMine){
-        cellElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
-        cellElement.style.backgroundImage = "url('./img/bomb.svg')";
+        openCellWithMine(cellElement);
         table.tableCells[cellId].isOpen = true;
         gameOver();      
     } else if(!haveMine && amountNeighborsWithMine > 0){
@@ -251,11 +234,60 @@ function clickOnCell(event){
         openEmptyCell(cellElement, cellId, table);
     }
 
-    table.counterFlags = checkAndAddNumberCellsWithFlag();
-    let counterFlagsSpan = document.getElementById("counter-flags");
-    counterFlagsSpan.innerHTML = table.counterFlags;
+    checkAndAddNumberCellsWithFlag();
 
     checkamountOpenedCells()
+}
+
+////
+
+//// Right click
+
+function rightClickOnCell(e) {
+    if (!table.timeCounterIsStart){startTimer()}
+    e.preventDefault();
+    let cellId = event.target.id;
+    let cellElement = document.getElementById(cellId);
+    
+    let haveFlag = table.tableCells[cellId].haveFlag;
+    if (!haveFlag && table.counterFlags < table.counterMines){
+        getFlagToCell(cellElement);
+        table.tableCells[cellId].haveFlag = true;
+    } else if (haveFlag){
+        removeFlagFromCell(cellElement);
+        table.tableCells[cellId].haveFlag = false;
+    }
+    
+    checkAndAddNumberCellsWithFlag();
+    checkCellsWithFlagsAndMines()
+}
+
+////
+
+//// Long touch action
+
+var touchStartTimeStamp = 0;
+var touchEndTimeStamp   = 0;
+
+function onTouchStart(e) {
+    touchStartTimeStamp = e.timeStamp;
+}
+
+function onTouchEnd(e) {
+    touchEndTimeStamp = e.timeStamp;
+
+    if (touchEndTimeStamp - touchStartTimeStamp > 500){
+        rightClickOnCell(e);
+    }
+}
+
+////
+
+//// Actions checks
+
+function openCellWithMine(cellElement){
+    cellElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
+    cellElement.style.backgroundImage = "url('./img/bomb.svg')";
 }
 
 function getNumberToCell(amountNeighborsWithMine, cellElement){
@@ -305,6 +337,31 @@ function workOnNeighbor(row, col, table) {
     }
 }
 
+function checkAndAddNumberCellsWithFlag() {
+    let counterFlags = 0;
+    let counterFlagsSpan = document.getElementById("counter-flags");
+    for (cell in table.tableCells){
+        if (table.tableCells[cell].haveFlag){
+            counterFlags++;
+        }
+    }
+    table.counterFlags = counterFlags;
+    counterFlagsSpan.innerHTML = table.counterFlags;
+}
+
+function getFlagToCell(cellElement){
+    cellElement.removeEventListener("click", clickOnCell);
+    cellElement.style.backgroundSize = "cover";
+    cellElement.style.backgroundImage = "url('./img/flag.png')";
+}
+
+function removeFlagFromCell(cellElement){
+    cellElement.addEventListener("click", clickOnCell);
+    cellElement.style.backgroundSize = "";
+    cellElement.style.backgroundImage = "";
+}
+
+
 function checkamountOpenedCells() {
     let amountOpenedCells = 0;
     for (cell in table.tableCells){
@@ -319,82 +376,23 @@ function checkamountOpenedCells() {
     }
 }
 
-function restartGame() {
-    removeGameTable();
-    table = buildGameTable(rows, cols, maxMines);
-    stopTimer();
-    resetTimeCounter();
-}
-
-function removeGameTable() {
-    let gameTable = document.getElementById('gameTable');
-    let elementCounterFlags = document.getElementById('counter-flags');
-    elementCounterFlags.innerHTML = 0;
-    gameTable.innerHTML = "";
-    gameTable.style.webkitFilter = "blur(.0em)";
-
-}
-
-function gameOver() {
-    let gameTable = document.getElementById('gameTable');
-    gameTable.style.webkitFilter = "blur(.05em)";
-    for (x in table.tableCells){
-        let cellId = x;
-        let haveMine = table.tableCells[x].haveMine;
-        let isOpen = table.tableCells[x].isOpen;
-        let cellElement = document.getElementById(cellId);
-        cellElement.removeEventListener("click", clickOnCell);
-        cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
-        cellElement.removeEventListener('touchstart', onTouchStart,false);
-        cellElement.removeEventListener('touchend', onTouchEnd,false);
-        if (haveMine && !isOpen){
-            cellElement.style.backgroundImage = "url('./img/bomb.svg')";
-            cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        } else if (!isOpen){
-            cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        }
-    }
-    stopTimer();
-}
-
-
-function rightClickOnCell(e) {
-    if (!table.timeCounterIsStart){startTimer()}
-    e.preventDefault();
-    let cellId = event.target.id;
-    let cellElement = document.getElementById(cellId);
-    
-    let haveFlag = table.tableCells[cellId].haveFlag;
-    if (!haveFlag && table.counterFlags < table.counterMines){
-        cellElement.removeEventListener("click", clickOnCell);
-        cellElement.style.backgroundSize = "cover";
-        cellElement.style.backgroundImage = "url('./img/flag.png')";
-        table.tableCells[cellId].haveFlag = true;
-    } else if (haveFlag){
-        cellElement.addEventListener("click", clickOnCell);
-        cellElement.style.backgroundSize = "";
-        cellElement.style.backgroundImage = "";
-        table.tableCells[cellId].haveFlag = false;
-    }
-    
-    table.counterFlags = checkAndAddNumberCellsWithFlag();
-    let counterFlagsSpan = document.getElementById("counter-flags");
-    counterFlagsSpan.innerHTML = table.counterFlags;
-    checkCellsWithFlagsAndMines()
-}
-
-function checkAndAddNumberCellsWithFlag() {
-    let counterFlags = 0;
+function checkCellsWithFlagsAndMines(){
+    let counterCellsWithFlagAndMines = 0;
     for (cell in table.tableCells){
-        if (table.tableCells[cell].haveFlag){
-            counterFlags++;
+        if (table.tableCells[cell].haveFlag && table.tableCells[cell].haveMine){
+            counterCellsWithFlagAndMines++
         }
     }
-    table.counterFlags = counterFlags;
-    return table.counterFlags
+    if (counterCellsWithFlagAndMines == table.counterMines){
+        won()
+    }
 }
 
+////
 
+/////////
+
+///////// Game state module
 
 function won() {
     let gameTable = document.getElementById('gameTable');
@@ -422,19 +420,47 @@ function openAllCells(x) {
         }
 }
 
-function checkCellsWithFlagsAndMines(){
-    let counterCellsWithFlagAndMines = 0;
-    for (cell in table.tableCells){
-        if (table.tableCells[cell].haveFlag && table.tableCells[cell].haveMine){
-            counterCellsWithFlagAndMines++
+function gameOver() {
+    let gameTable = document.getElementById('gameTable');
+    gameTable.style.webkitFilter = "blur(.05em)";
+    for (x in table.tableCells){
+        let cellId = x;
+        let haveMine = table.tableCells[x].haveMine;
+        let isOpen = table.tableCells[x].isOpen;
+        let cellElement = document.getElementById(cellId);
+        cellElement.removeEventListener("click", clickOnCell);
+        cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
+        cellElement.removeEventListener('touchstart', onTouchStart,false);
+        cellElement.removeEventListener('touchend', onTouchEnd,false);
+        if (haveMine && !isOpen){
+            cellElement.style.backgroundImage = "url('./img/bomb.svg')";
+            cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        } else if (!isOpen){
+            cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
         }
     }
-    if (counterCellsWithFlagAndMines == table.counterMines){
-        won()
-    }
+    stopTimer();
 }
 
-/////// Time counter module
+function restartGame() {
+    removeGameTable();
+    table = buildGameTable(rows, cols, maxMines);
+    stopTimer();
+    resetTimeCounter();
+}
+
+function removeGameTable() {
+    let gameTable = document.getElementById('gameTable');
+    let elementCounterFlags = document.getElementById('counter-flags');
+    elementCounterFlags.innerHTML = 0;
+    gameTable.innerHTML = "";
+    gameTable.style.webkitFilter = "blur(.0em)";
+
+}
+
+/////////
+
+///////// Time counter module
 
 var interval; 
 
@@ -503,4 +529,4 @@ function resetTimeCounter() {
     hoursElement.innerHTML = "00";
 }
 
-////////
+/////////
