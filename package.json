@@ -1,0 +1,25 @@
+{
+  "name": "mines",
+  "version": "1.0.0",
+  "description": "Аnalogue of the Mines game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack src/js/app.js --output dist/bundle.js --mode development",
+    "start": "webpack src/js/app.js --output dist/bundle.js --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VitaliyShulik/mines.git"
+  },
+  "author": "VitaliyShulik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VitaliyShulik/mines/issues"
+  },
+  "homepage": "https://github.com/VitaliyShulik/mines#readme",
+  "devDependencies": {
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}

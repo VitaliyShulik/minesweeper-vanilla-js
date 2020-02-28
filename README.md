@@ -1,6 +1,10 @@
 
 ## version 1.0.0
 
+npm init 
+npm install webpack
+npm run start
+
 Аnalogue of the Mines game.
 
 Initial Functionality:
