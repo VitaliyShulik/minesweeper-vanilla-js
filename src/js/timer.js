@@ -1,6 +1,6 @@
 import { table } from "./app.js";
 
-export var interval; 
+var interval; 
 
 export function startTimer(){
     let timeCounter = 1;

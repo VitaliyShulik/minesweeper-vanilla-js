@@ -1,13 +1,12 @@
 import { 
     stopTimer
  } from "./timer.js";
-
 import { 
     clickOnCell,
     rightClickOnCell,
     onTouchStart,
     onTouchEnd
- } from "./action.js";
+ } from "./actions.js";
 import { 
     table
  } from "./app.js";
@@ -26,7 +25,7 @@ export function gameOver() {
     stopTimer();
 }
 
-export function openAllCells() {
+function openAllCells() {
     for (const cell in table.tableCells){
         let haveMine = table.tableCells[cell].haveMine;
         let isOpen = table.tableCells[cell].isOpen;

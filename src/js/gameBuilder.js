@@ -3,7 +3,7 @@ import {
     rightClickOnCell,
     onTouchStart,
     onTouchEnd
- } from "./action.js";
+ } from "./actions.js";
 
 export function buildGameTable(rows, cols, maxMines) {
     let tableCells = {};
@@ -192,11 +192,11 @@ function addNieghbors(table) {
 }
 
 function checkMine(row, col, table) {
-    let neighbor = findNeigbor(row, col, table);
+    let neighbor = findNeighbor(row, col, table);
     return neighbor.haveMine;
 }
 
-export function findNeigbor(row, col, table) {
+export function findNeighbor(row, col, table) {
     let neighbor = "";
     for (const cell in table.tableCells){
         if (table.tableCells[cell].row == row && table.tableCells[cell].col == col){
