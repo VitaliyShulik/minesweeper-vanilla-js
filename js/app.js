@@ -1,9 +1,9 @@
-///////// Module game building
-
 var rows = 8;
 var cols = 8;
 var maxMines = 10; 
 var table = buildGameTable(rows, cols, maxMines);
+
+///////// Module game building
 
 function buildGameTable(rows, cols, maxMines) {
     let tableCells = {};
@@ -161,7 +161,7 @@ function setNeighbors(rows, cols, i, n) {
 }
 
 function setMine(maxMines, table) {
-    for (cell in table.tableCells){
+    for (const cell in table.tableCells){
         let cellObject = table.tableCells[cell];
         if (table.counterMines < maxMines && Math.random() > 0.98 && !cellObject.haveMine){
             table.counterMines++;
@@ -172,24 +172,23 @@ function setMine(maxMines, table) {
 }
 
 function addNieghbors(table) {
-    for (const x in table.tableCells){
-        let counterNierhbors = 0;
-        let xNeighbors = table.tableCells[x].neighbors;
-        for (const k in xNeighbors){
-            let nowNeighbors = xNeighbors[k];
+    for (const cell in table.tableCells){
+        let counterNierhborsWithMine = 0;
+        let cellNeighbors = table.tableCells[cell].neighbors;
+        for (const neighbor in cellNeighbors){
+            let nowNeighbors = cellNeighbors[neighbor];
             let row = nowNeighbors.row;
             let col = nowNeighbors.col;
             let haveMine = checkMine(row, col, table);
             if (nowNeighbors == ""){
                 continue;
             } else if (haveMine){
-                counterNierhbors++;
+                counterNierhborsWithMine++;
             }
         
         }
-        Object.assign(table.tableCells[x], {amountNeighborsWithMine: counterNierhbors});
+        Object.assign(table.tableCells[cell], {amountNeighborsWithMine: counterNierhborsWithMine});
     }
- 
 }
 
 function checkMine(row, col, table) {
@@ -199,13 +198,12 @@ function checkMine(row, col, table) {
 
 function findNeigbor(row, col, table) {
     let neighbor = "";
-    for (const k in table.tableCells){
-        if (table.tableCells[k].row == row && table.tableCells[k].col == col){
-            neighbor = table.tableCells[k];
+    for (const cell in table.tableCells){
+        if (table.tableCells[cell].row == row && table.tableCells[cell].col == col){
+            neighbor = table.tableCells[cell];
         }
     }
     return neighbor;
-    
 }
 
 /////////
@@ -218,14 +216,13 @@ function clickOnCell(event){
     let cellId = event.target.id;
     let cellElement = document.getElementById(cellId);
 
-    if (!table.timeCounterIsStart){startTimer()}
-
     let haveMine = table.tableCells[cellId].haveMine;
     let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
 
+    if (!table.timeCounterIsStart){startTimer()}
+
     if (haveMine){
-        openCellWithMine(cellElement);
-        table.tableCells[cellId].isOpen = true;
+        openCellWithMine(cellElement, cellId, table);
         gameOver();      
     } else if(!haveMine && amountNeighborsWithMine > 0){
         getNumberToCell(amountNeighborsWithMine, cellElement);
@@ -244,18 +241,19 @@ function clickOnCell(event){
 //// Right click
 
 function rightClickOnCell(e) {
-    if (!table.timeCounterIsStart){startTimer()}
     e.preventDefault();
+
     let cellId = event.target.id;
     let cellElement = document.getElementById(cellId);
     
     let haveFlag = table.tableCells[cellId].haveFlag;
+
+    if (!table.timeCounterIsStart){startTimer()}
+
     if (!haveFlag && table.counterFlags < table.counterMines){
-        getFlagToCell(cellElement);
-        table.tableCells[cellId].haveFlag = true;
+        getFlagToCell(cellElement, table, cellId);
     } else if (haveFlag){
-        removeFlagFromCell(cellElement);
-        table.tableCells[cellId].haveFlag = false;
+        removeFlagFromCell(cellElement, table, cellId);
     }
     
     checkAndAddNumberCellsWithFlag();
@@ -285,9 +283,11 @@ function onTouchEnd(e) {
 
 //// Actions checks
 
-function openCellWithMine(cellElement){
+function openCellWithMine(cellElement, cellId, table){
     cellElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
     cellElement.style.backgroundImage = "url('./img/bomb.svg')";
+    table.tableCells[cellId].isOpen = true;
+    
 }
 
 function getNumberToCell(amountNeighborsWithMine, cellElement){
@@ -313,7 +313,7 @@ function openEmptyCell(cellElement, cellId, table){
 
 function checkNeighborsWithNeighborsWithMine(table, cellId) {
     let neighbors = table.tableCells[cellId].neighbors;
-    for (neighbor in neighbors){
+    for (const neighbor in neighbors){
         if (neighbors[neighbor] !== ""){
             let row = neighbors[neighbor].row;
             let col = neighbors[neighbor].col;
@@ -340,7 +340,7 @@ function workOnNeighbor(row, col, table) {
 function checkAndAddNumberCellsWithFlag() {
     let counterFlags = 0;
     let counterFlagsSpan = document.getElementById("counter-flags");
-    for (cell in table.tableCells){
+    for (const cell in table.tableCells){
         if (table.tableCells[cell].haveFlag){
             counterFlags++;
         }
@@ -349,22 +349,24 @@ function checkAndAddNumberCellsWithFlag() {
     counterFlagsSpan.innerHTML = table.counterFlags;
 }
 
-function getFlagToCell(cellElement){
+function getFlagToCell(cellElement, table, cellId){
     cellElement.removeEventListener("click", clickOnCell);
     cellElement.style.backgroundSize = "cover";
     cellElement.style.backgroundImage = "url('./img/flag.png')";
+    table.tableCells[cellId].haveFlag = true;
 }
 
-function removeFlagFromCell(cellElement){
+function removeFlagFromCell(cellElement, table, cellId){
     cellElement.addEventListener("click", clickOnCell);
     cellElement.style.backgroundSize = "";
     cellElement.style.backgroundImage = "";
+    table.tableCells[cellId].haveFlag = false;
 }
 
 
 function checkamountOpenedCells() {
     let amountOpenedCells = 0;
-    for (cell in table.tableCells){
+    for (const cell in table.tableCells){
         if (table.tableCells[cell].isOpen){
             amountOpenedCells++;
         }
@@ -378,7 +380,7 @@ function checkamountOpenedCells() {
 
 function checkCellsWithFlagsAndMines(){
     let counterCellsWithFlagAndMines = 0;
-    for (cell in table.tableCells){
+    for (const cell in table.tableCells){
         if (table.tableCells[cell].haveFlag && table.tableCells[cell].haveMine){
             counterCellsWithFlagAndMines++
         }
@@ -397,37 +399,22 @@ function checkCellsWithFlagsAndMines(){
 function won() {
     let gameTable = document.getElementById('gameTable');
     gameTable.style.webkitFilter = "blur(.05em)";
-    for (x in table.tableCells){
-        openAllCells(x)
-    }
+    openAllCells();
     stopTimer();
-}
-
-function openAllCells(x) {
-    let cellId = x;
-        let haveMine = table.tableCells[x].haveMine;
-        let isOpen = table.tableCells[x].isOpen;
-        let cellElement = document.getElementById(cellId);
-        cellElement.removeEventListener("click", clickOnCell);
-        cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
-        cellElement.removeEventListener('touchstart', onTouchStart,false);
-        cellElement.removeEventListener('touchend', onTouchEnd,false);
-        if (haveMine && !isOpen){
-            cellElement.style.backgroundImage = "url('./img/bomb.svg')";
-            cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        } else if (!isOpen){
-            cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-        }
 }
 
 function gameOver() {
     let gameTable = document.getElementById('gameTable');
     gameTable.style.webkitFilter = "blur(.05em)";
-    for (x in table.tableCells){
-        let cellId = x;
-        let haveMine = table.tableCells[x].haveMine;
-        let isOpen = table.tableCells[x].isOpen;
-        let cellElement = document.getElementById(cellId);
+    openAllCells();
+    stopTimer();
+}
+
+function openAllCells() {
+    for (const cell in table.tableCells){
+        let haveMine = table.tableCells[cell].haveMine;
+        let isOpen = table.tableCells[cell].isOpen;
+        let cellElement = document.getElementById(cell);
         cellElement.removeEventListener("click", clickOnCell);
         cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
         cellElement.removeEventListener('touchstart', onTouchStart,false);
@@ -439,8 +426,8 @@ function gameOver() {
             cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
         }
     }
-    stopTimer();
 }
+
 
 function restartGame() {
     removeGameTable();
