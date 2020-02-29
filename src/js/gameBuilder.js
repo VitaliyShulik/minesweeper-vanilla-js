@@ -5,7 +5,10 @@ import {
     onTouchEnd
  } from "./actions.js";
 
-export function buildGameTable(rows, cols, maxMines) {
+export function buildGameTable(level) {
+    let rows = level.rows;
+    let cols = level.cols;
+    let maxMines = level.maxMines;
     let tableCells = {};
     let table = {counterMines:0, counterFlags:0, amountCells: rows * cols, timeCounterIsStart: false};
     let gameTableElement = document.getElementById("gameTable");

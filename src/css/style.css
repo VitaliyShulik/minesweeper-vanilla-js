@@ -10,7 +10,7 @@
     -ms-user-select: none;
     user-select: none;
 }
-.container {
+body {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -18,14 +18,24 @@
     background-color: #daf1ff;
 }
 
-.header {
+header {
     width: 100%;
-    padding: 10px 30% 10px 30%;
+    padding: 10px 0;
+    justify-content: start;
     background-color: royalblue;
     font-size: larger;
     font-weight: 500;
     text-align: center;
     color: #ffffff;
+}
+
+select {
+    padding: 5px;
+    margin-bottom: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #daf1ff;
+    font-size: medium;
 }
 
 .game-canvas {

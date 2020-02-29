@@ -8,20 +8,31 @@
 
 </head>
 <body>
-    <div class="container">
-    <div class="header">
-        Here you will can setting level of difficulty<br>
-        <p><span id="hours">00</span> : <span id="minutes">00</span> : <span id="seconds">00</span></p>
-        <button id="restart">Restart game</button>
-        <p>
-            <span id="counter-flags">0</span> / <span id="amount-mines"></span>
-        </p>
-    </div>
-    <div class="game-canvas" id="gameTable">
-
-    </div>
+    <header>
+            <label for="level">Level</label>
+            <select title="Level will change after restart game" id="level">
+                <option title="8x8 and 10 mines" value="easyLevel">Easy</option>
+                <option title="10x10 and 14 mines" value="normalLevel">Normal</option>
+                <option title="12x12 and 20 mines" value="hardLevel">Hard</option>
+            </select>
+            <button id="restart">Restart game</button>
+            <p>
+                <span id="hours">00</span>
+                    : 
+                <span id="minutes">00</span>
+                    : 
+                <span id="seconds">00</span>
+            </p>
+    
+            <p>
+                <span id="counter-flags">0</span>
+                    / 
+                <span id="amount-mines"></span>
+            </p>    
+    </header>
+    <div class="game-canvas" id="gameTable"></div>
+    <footer></footer>
     
     <script src="./dist/bundle.js"></script>
- 
 </body>
 </html>
