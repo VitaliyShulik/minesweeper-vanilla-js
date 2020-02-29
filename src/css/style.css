@@ -21,7 +21,6 @@ body {
 header {
     width: 100%;
     padding: 10px 0;
-    justify-content: start;
     background-color: royalblue;
     font-size: larger;
     font-weight: 500;

@@ -1,7 +1,5 @@
 
-## version 1.1.0
-
-npm init 
+## version 1.2.0
 
 npm install webpack
 
@@ -23,7 +21,7 @@ Additional functionality:
 
 - Time counter; +
 - Game restart button; +
-- The ability to change the number of cells and mines;
+- The ability to change the number of cells and mines; +
 - Table with the results of the winnings;
 - Adaptive layout.
 
@@ -45,6 +43,6 @@ Additional functionality:
 
 - Счетчик отсчета времени; +
 - Кнопка перезагрузки игры; +
-- Возможность изменения количества ячеек и мин;
+- Возможность изменения количества ячеек и мин; +
 - Таблица с результатами выйгрышей;
 - Адаптивная верстка.

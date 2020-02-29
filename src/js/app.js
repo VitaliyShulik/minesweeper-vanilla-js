@@ -24,21 +24,21 @@ function setLevel() {
     level = document.getElementById('level').value;
 
     switch (level) {
-    case "easyLevel":
+    case "easy":
         level = {
             rows: 8,
             cols: 8,
             maxMines:10
         }
         break;
-    case "normalLevel":
+    case "normal":
         level = {
             rows: 10,
             cols: 10,
             maxMines: 14
         }
         break;
-    case "hardLevel":
+    case "hard":
         level = {
             rows: 12,
             cols: 12,
