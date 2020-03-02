@@ -1,5 +1,5 @@
 
-## version 1.2.0
+## version 1.3.0
 
 npm install webpack
 
@@ -23,7 +23,7 @@ Additional functionality:
 - Game restart button; +
 - The ability to change the number of cells and mines; +
 - Table with the results of the winnings;
-- Adaptive layout.
+- Adaptive layout. +
 
 Аналог игры "Сапёр".
 
@@ -45,4 +45,4 @@ Additional functionality:
 - Кнопка перезагрузки игры; +
 - Возможность изменения количества ячеек и мин; +
 - Таблица с результатами выйгрышей;
-- Адаптивная верстка.
+- Адаптивная верстка. + 

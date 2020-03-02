@@ -13,6 +13,21 @@ export function buildGameTable(level) {
     let table = {counterMines:0, counterFlags:0, amountCells: rows * cols, timeCounterIsStart: false};
     let gameTableElement = document.getElementById("gameTable");
     document.getElementById("amount-mines").innerHTML = maxMines;
+
+    let cellClass;
+    switch (rows) {
+        case 8:
+            cellClass = "cell-8"
+            break;
+        case 10:
+            cellClass = "cell-10"
+            break;        
+        case 12:
+            cellClass = "cell-12"
+            break;
+        default:
+            break;
+    }
     
 
     // create rows
@@ -28,7 +43,7 @@ export function buildGameTable(level) {
         // create row's cols
         for (let n = 0; n < cols; n++) {
             let divCell = document.createElement("div");
-            divCell.setAttribute("class", "cell");
+            divCell.setAttribute("class", cellClass);
             divCell.addEventListener("click", clickOnCell);
             divCell.addEventListener("contextmenu", rightClickOnCell, false);
             divCell.addEventListener('touchstart', onTouchStart,false);
