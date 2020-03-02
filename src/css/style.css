@@ -37,16 +37,6 @@ select {
     font-size: medium;
 }
 
-
-.row {
-    display: flex;
-    flex-wrap: nowrap;
-}
-
-.cell:hover {
-    background-color: rgba(255, 255, 255, 0.8);;
-}
-
 button {
     background-color: snow;
     border: none;
@@ -65,9 +55,18 @@ button {
     justify-content: center;
 }
 
+.row {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
 [class^="cell"] {
     background-color: rgba(255, 255, 255, 0.6);
     text-align: center;
+}
+
+[class^="cell"]:hover {
+    background-color: rgba(255, 255, 255, 0.8);;
 }
 
 .cell-8 {
