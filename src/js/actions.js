@@ -8,6 +8,9 @@ import { table } from "./app.js";
 //// Left click
 
 export function clickOnCell(event){
+
+    if (!table.timeCounterIsStart){startTimer()}
+    
     let cellId = event.target.id;
     let cellElement = document.getElementById(cellId);
 
@@ -16,8 +19,6 @@ export function clickOnCell(event){
     } else {
         let haveMine = table.tableCells[cellId].haveMine;
         let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
-
-        if (!table.timeCounterIsStart){startTimer()}
 
         if (haveMine){
             openCellWithMine(cellElement, cellId, table);
