@@ -10,7 +10,14 @@ export function buildGameTable(level) {
     let cols = level.cols;
     let maxMines = level.maxMines;
     let tableCells = {};
-    let table = {counterMines:0, counterFlags:0, amountCells: rows * cols, timeCounterIsStart: false};
+    let table = {
+        counterMines:0, 
+        maxMines: maxMines, 
+        counterFlags:0, 
+        amountCells: rows * cols, 
+        timeCounterIsStart: false, 
+        firstClick: false
+    };
     let gameTableElement = document.getElementById("gameTable");
     document.getElementById("amount-mines").innerHTML = maxMines;
 
@@ -57,8 +64,10 @@ export function buildGameTable(level) {
                  row: i,
                  col: n,
                  neighbors: setNeighbors(rows, cols, i, n),
+                 amountNeighborsWithMine: 0,
                  haveMine: false,
                  isOpen: false,
+                 firstClickOpen: false,
                  haveFlag: false,
                  writable: false
              }});
@@ -66,10 +75,6 @@ export function buildGameTable(level) {
     }
     table.tableCells = tableCells;
 
-    while (table.counterMines != maxMines) {
-        setMine(maxMines, table);
-    }
-    addNieghbors(table);
     return table
 }
 
@@ -178,49 +183,5 @@ function setNeighbors(rows, cols, i, n) {
     }
 }
 
-function setMine(maxMines, table) {
-    for (const cell in table.tableCells){
-        let cellObject = table.tableCells[cell];
-        if (table.counterMines < maxMines && Math.random() > 0.98 && !cellObject.haveMine){
-            table.counterMines++;
-            cellObject.haveMine = true;
-        }
-    } 
-     
-}
 
-function addNieghbors(table) {
-    for (const cell in table.tableCells){
-        let counterNierhborsWithMine = 0;
-        let cellNeighbors = table.tableCells[cell].neighbors;
-        for (const neighbor in cellNeighbors){
-            let nowNeighbors = cellNeighbors[neighbor];
-            let row = nowNeighbors.row;
-            let col = nowNeighbors.col;
-            let haveMine = checkMine(row, col, table);
-            if (nowNeighbors == ""){
-                continue;
-            } else if (haveMine){
-                counterNierhborsWithMine++;
-            }
-        
-        }
-        Object.assign(table.tableCells[cell], {amountNeighborsWithMine: counterNierhborsWithMine});
-    }
-}
-
-function checkMine(row, col, table) {
-    let neighbor = findNeighbor(row, col, table);
-    return neighbor.haveMine;
-}
-
-export function findNeighbor(row, col, table) {
-    let neighbor = "";
-    for (const cell in table.tableCells){
-        if (table.tableCells[cell].row == row && table.tableCells[cell].col == col){
-            neighbor = table.tableCells[cell];
-        }
-    }
-    return neighbor;
-}
 

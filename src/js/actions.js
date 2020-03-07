@@ -3,7 +3,6 @@ import {
     won,
     gameOver
  } from "./gameState.js";
-import { findNeighbor } from "./gameBuilder.js";
 import { table } from "./app.js";
 
 //// Left click
@@ -12,19 +11,23 @@ export function clickOnCell(event){
     let cellId = event.target.id;
     let cellElement = document.getElementById(cellId);
 
-    let haveMine = table.tableCells[cellId].haveMine;
-    let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
-
-    if (!table.timeCounterIsStart){startTimer()}
-
-    if (haveMine){
-        openCellWithMine(cellElement, cellId, table);
-        gameOver();      
-    } else if(!haveMine && amountNeighborsWithMine > 0){
-        getNumberToCell(amountNeighborsWithMine, cellElement);
-        table.tableCells[cellId].isOpen = true;
+    if (!table.firstClick) {
+        firstClick(table, cellElement, cellId)
     } else {
-        openEmptyCell(cellElement, cellId, table);
+        let haveMine = table.tableCells[cellId].haveMine;
+        let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
+
+        if (!table.timeCounterIsStart){startTimer()}
+
+        if (haveMine){
+            openCellWithMine(cellElement, cellId, table);
+            gameOver();      
+        } else if(!haveMine && amountNeighborsWithMine > 0){
+            getNumberToCell(amountNeighborsWithMine, cellElement);
+            table.tableCells[cellId].isOpen = true;
+        } else {
+            openEmptyCell(cellElement, cellId, table);
+        }
     }
 
     checkAndAddNumberCellsWithFlag();
@@ -41,7 +44,7 @@ export function rightClickOnCell(e) {
 
     let cellId = event.target.id;
     let cellElement = document.getElementById(cellId);
-    
+
     let haveFlag = table.tableCells[cellId].haveFlag;
 
     if (!table.timeCounterIsStart){startTimer()}
@@ -77,7 +80,85 @@ export function onTouchEnd(e) {
 
 ////
 
-//// Actions checks
+//// Actions methods
+
+function firstClick(table, cellElement, cellId){
+    cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+    table.tableCells[cellId].isOpen = true;
+    table.tableCells[cellId].firstClickOpen = true;
+    table.tableCells[cellId].haveFlag = false;
+    cellElement.style.backgroundImage = '';
+    cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
+    cellElement.removeEventListener('touchstart', onTouchStart,false);
+    cellElement.removeEventListener('touchend', onTouchEnd,false);
+
+    let neighbors = table.tableCells[cellId].neighbors;
+    for (const neighbor in neighbors){
+        if (neighbors[neighbor] !== ""){
+            let row = neighbors[neighbor].row;
+            let col = neighbors[neighbor].col;
+            let neighborCellId = "cell-" + row + "-" + col;
+            table.tableCells[neighborCellId].isOpen = true;
+            table.tableCells[neighborCellId].firstClickOpen = true;
+        }     
+    }
+    while (table.counterMines != table.maxMines) {
+        setMine(table);
+    }
+    addNieghbors(table);
+
+    checkNeighborsWithNeighborsWithMine(table, cellId);
+    table.firstClick = true;
+}
+
+function setMine(table) {
+    for (const cell in table.tableCells){
+        let cellObject = table.tableCells[cell];
+        if (table.counterMines < table.maxMines 
+            && Math.random() > 0.98 
+            && !cellObject.haveMine 
+            && !cellObject.isOpen){
+            table.counterMines++;
+            cellObject.haveMine = true;
+        }
+    } 
+     
+}
+
+function addNieghbors(table) {
+    for (const cell in table.tableCells){
+        let counterNierhborsWithMine = 0;
+        let cellNeighbors = table.tableCells[cell].neighbors;
+        for (const neighbor in cellNeighbors){
+            let nowNeighbors = cellNeighbors[neighbor];
+            let row = nowNeighbors.row;
+            let col = nowNeighbors.col;
+            let haveMine = checkMine(row, col, table);
+            if (nowNeighbors == ""){
+                continue;
+            } else if (haveMine){
+                counterNierhborsWithMine++;
+            }
+        
+        }
+        table.tableCells[cell].amountNeighborsWithMine = counterNierhborsWithMine;
+    }
+}
+
+function checkMine(row, col, table) {
+    let neighbor = findNeighbor(row, col, table);
+    return neighbor.haveMine;
+}
+
+function findNeighbor(row, col, table) {
+    let neighbor = "";
+    for (const cell in table.tableCells){
+        if (table.tableCells[cell].row == row && table.tableCells[cell].col == col){
+            neighbor = table.tableCells[cell];
+        }
+    }
+    return neighbor;
+}
 
 function openCellWithMine(cellElement, cellId, table){
     cellElement.style.backgroundColor = "rgba(255, 0, 0, 0.6)";
@@ -124,11 +205,15 @@ function workOnNeighbor(row, col, table) {
     let neighbor = findNeighbor(row, col, table);
     let amountNeighborsWithMine = neighbor.amountNeighborsWithMine;
     let isOpen = table.tableCells[cellId].isOpen;
+    let firstClickOpen = table.tableCells[cellId].firstClickOpen;
     if (amountNeighborsWithMine != 0){
         getNumberToCell(amountNeighborsWithMine, cellElement);
         table.tableCells[cellId].isOpen = true;
         table.tableCells[cellId].haveFlag = false;
     } else if (amountNeighborsWithMine == 0 && !isOpen){
+        openEmptyCell(cellElement, cellId, table);
+    } else if (amountNeighborsWithMine == 0 && firstClickOpen){
+        table.tableCells[cellId].firstClickOpen = false;
         openEmptyCell(cellElement, cellId, table);
     }
 }
