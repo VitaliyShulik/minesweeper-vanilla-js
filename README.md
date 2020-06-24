@@ -13,7 +13,7 @@ npm install
 npm run start
 ```
 
-Initial Functionality:
+#Initial Functionality:
 
 - 10 x 10 cells; +
 - 16 mines in random order; +
@@ -23,7 +23,7 @@ Initial Functionality:
 - Game Over. +
 - Game Win. +
 
-Additional functionality:
+#Additional functionality:
 
 - Time counter; +
 - Game restart button; +
