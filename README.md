@@ -2,6 +2,9 @@
 
 Аnalogue of the minesweeper.
 
+[Demo](https://mines.vitaliyshulik.tk/)
+
+
 ## Quick Start
 
 ```bash
