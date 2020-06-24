@@ -6,8 +6,8 @@
 ## Quick Start
 
 ```bash
-# Install webpack
-npm install webpack
+# Install dependencies
+npm install
 
 # Run the project
 npm run start
