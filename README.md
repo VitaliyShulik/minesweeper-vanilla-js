@@ -1,4 +1,4 @@
-
+# Minesweeper Vanilla JS
 ## version 1.4.1
 
 Аnalogue of the minesweeper.
@@ -13,7 +13,7 @@ npm install
 npm run start
 ```
 
-# Initial Functionality:
+## Initial Functionality:
 
 - 10 x 10 cells; +
 - 16 mines in random order; +
@@ -23,7 +23,7 @@ npm run start
 - Game Over. +
 - Game Win. +
 
-# Additional functionality:
+## Additional functionality:
 
 - Time counter; +
 - Game restart button; +
