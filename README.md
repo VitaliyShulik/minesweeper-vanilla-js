@@ -1,11 +1,17 @@
 
 ## version 1.4.1
 
+Аnalogue of the minesweeper.
+
+## Quick Start
+
+```bash
+# Install webpack
 npm install webpack
 
+# Run the project
 npm run start
-
-Аnalogue of the minesweeper.
+```
 
 Initial Functionality:
 
