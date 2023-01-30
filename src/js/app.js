@@ -1,52 +1,18 @@
-import { 
-    buildGameTable
-} from "./gameBuilder.js";
-import { removeGameTable } from "./gameState";
+import { buildGameTable } from "./gameBuilder.js";
 import { stopTimer, resetTimeCounter } from "./timer";
 
-var level;
-setLevel();
+const restartElement = document.getElementById("restart");
+const levelElement = document.getElementById('level');
 
-export var table = buildGameTable(level);
+export let table = {};
 
-document.getElementById("restart").addEventListener("click", restartGame);
+restartElement.addEventListener("click", restartGame);
+levelElement.addEventListener("change", restartGame);
 
+restartGame();
 
 function restartGame() {
-    setLevel();
-    removeGameTable();
-    table = buildGameTable(level);
+    table = buildGameTable(levelElement.value.split(',').map(item => +item));
     stopTimer();
     resetTimeCounter();
-}
-
-function setLevel() {
-    level = document.getElementById('level').value;
-
-    switch (level) {
-    case "easy":
-        level = {
-            rows: 8,
-            cols: 8,
-            maxMines:10
-        }
-        break;
-    case "normal":
-        level = {
-            rows: 10,
-            cols: 10,
-            maxMines: 14
-        }
-        break;
-    case "hard":
-        level = {
-            rows: 12,
-            cols: 12,
-            maxMines: 20
-        }
-        break;
-    default:
-        break;
-    }
-
 }
