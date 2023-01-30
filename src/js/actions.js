@@ -9,25 +9,26 @@ import { table } from "./app.js";
 
 export function clickOnCell(e){
 
-    if (!table.timeCounterIsStart){startTimer()}
+    if (table.won === undefined && !table.timeCounterIsStart){startTimer()}
     
     let cellId = e.target.id;
     let cellElement = document.getElementById(cellId);
+    let cell = table.tableCells[cellId];
 
-    if (!table.tableCells[cellId] || table.tableCells[cellId].haveFlag) return;
+    if (!cell || cell.haveFlag || table.won !== undefined) return;
 
     if (!table.firstClick) {
         firstClick(table, cellElement, cellId)
     } else {
-        let haveMine = table.tableCells[cellId].haveMine;
-        let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
+        let haveMine = cell.haveMine;
+        let amountNeighborsWithMine = cell.amountNeighborsWithMine;
 
         if (haveMine){
             openCellWithMine(cellElement, cellId, table);
             gameOver();      
         } else if(!haveMine && amountNeighborsWithMine > 0){
             getNumberToCell(amountNeighborsWithMine, cellElement);
-            table.tableCells[cellId].isOpen = true;
+            cell.isOpen = true;
         } else {
             openEmptyCell(cellElement, cellId, table);
         }
@@ -48,7 +49,7 @@ export function rightClickOnCell(e) {
     let cellId = e.target.id;
     let cellElement = document.getElementById(cellId);
 
-    if (!table.tableCells[cellId]) return;
+    if (!table.tableCells[cellId] || table.won !== undefined) return;
 
     let haveFlag = table.tableCells[cellId].haveFlag;
 

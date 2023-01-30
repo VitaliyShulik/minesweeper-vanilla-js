@@ -6,6 +6,7 @@ export function won() {
     gameTable.style.webkitFilter = "blur(.05em)";
     openAllCells();
     stopTimer();
+    table.won = true;
 }
 
 export function gameOver() {
@@ -13,6 +14,7 @@ export function gameOver() {
     gameTable.style.webkitFilter = "blur(.05em)";
     openAllCells();
     stopTimer();
+    table.won = false;
 }
 
 function openAllCells() {

@@ -25,7 +25,8 @@ export function buildGameTable([rows, cols, maxMines]) {
         counterFlags:0, 
         amountCells: rows * cols, 
         timeCounterIsStart: false, 
-        firstClick: false
+        firstClick: false,
+        won: undefined
     });
 
     removeGameTable();
