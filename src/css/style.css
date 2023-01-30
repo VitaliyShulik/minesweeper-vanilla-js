@@ -49,116 +49,54 @@ button {
 }
 
 .game-canvas {
+    display: flex;
+    flex-direction: column;
     margin: 20px auto;
     padding: 5px 0 0 5px;
     background-color: #55b4ff;
-    justify-content: center;
+    width: 500px;
+    height: 500px;
 }
 
 .row {
     display: flex;
+    flex: auto;
     flex-wrap: nowrap;
 }
 
 [class^="cell"] {
     background-color: rgba(255, 255, 255, 0.6);
     text-align: center;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    flex: auto;
 }
 
 [class^="cell"]:hover {
-    background-color: rgba(255, 255, 255, 0.8);;
-}
-
-.cell-8 {
-    margin-right: 5px;
-    margin-bottom: 5px;
-    height: 60px;
-    width: 60px;
-}
-
-.cell-10 {
-    margin-right: 5px;
-    margin-bottom: 5px;
-    height: 60px;
-    width: 60px;
-}
-
-.cell-12 {
-    margin-right: 5px;
-    margin-bottom: 5px;
-    height: 60px;
-    width: 60px;
-}
-
-@media screen and (max-width: 1200px) {
-    .cell-12 {
-        height: 50px;
-        width: 50px;
-    }
-}
-
-@media screen and (max-width: 992px) {
-    .cell-10 {
-        height: 50px;
-        width: 50px;
-    }
-
-    .cell-12 {
-        height: 40px;
-        width: 40px;
-    }
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 @media screen and (max-width: 768px) {
-    .cell-8 {
-        height: 50px;
-        width: 50px;
-        margin-right: 2px;
-        margin-bottom: 2px;
-    }
-
-    .cell-10 {
-        height: 40px;
-        width: 40px;
-        margin-right: 2px;
-        margin-bottom: 2px;
-    }
-
-    .cell-12 {
-        height: 35px;
-        width: 35px;
-        margin-right: 2px;
-        margin-bottom: 2px;
-    }
-
     .game-canvas {
         padding: 2px 0 0 2px;
+        width: 450px;
+        height: 450px;
+
+    }
+    [class^="cell"] {
+        margin-right: 2px;
+        margin-bottom: 2px;
     }
 }
 
 @media screen and (max-width: 567px) {
-    .cell-8 {
-        height: 40px;
-        width: 40px;
-        margin-right: 1px;
-        margin-bottom: 1px;
-    }
-
-    .cell-10 {
-        height: 35px;
-        width: 35px;
-        margin-right: 1px;
-        margin-bottom: 1px;
-    }
-
-    .cell-12 {
-        height: 30px;
-        width: 30px;
-        margin-right: 1px;
-        margin-bottom: 1px;
-    }
-
     .game-canvas {
         padding: 1px 0 0 1px;
+        width: 400px;
+        height: 400px;
+    }
+    [class^="cell"] {
+        margin-right: 1px;
+        margin-bottom: 1px;
     }
 }

@@ -7,25 +7,28 @@ import { table } from "./app.js";
 
 //// Left click
 
-export function clickOnCell(event){
+export function clickOnCell(e){
 
-    if (!table.timeCounterIsStart){startTimer()}
+    if (table.won === undefined && !table.timeCounterIsStart){startTimer()}
     
-    let cellId = event.target.id;
+    let cellId = e.target.id;
     let cellElement = document.getElementById(cellId);
+    let cell = table.tableCells[cellId];
+
+    if (!cell || cell.haveFlag || table.won !== undefined) return;
 
     if (!table.firstClick) {
         firstClick(table, cellElement, cellId)
     } else {
-        let haveMine = table.tableCells[cellId].haveMine;
-        let amountNeighborsWithMine = table.tableCells[cellId].amountNeighborsWithMine;
+        let haveMine = cell.haveMine;
+        let amountNeighborsWithMine = cell.amountNeighborsWithMine;
 
         if (haveMine){
             openCellWithMine(cellElement, cellId, table);
             gameOver();      
         } else if(!haveMine && amountNeighborsWithMine > 0){
             getNumberToCell(amountNeighborsWithMine, cellElement);
-            table.tableCells[cellId].isOpen = true;
+            cell.isOpen = true;
         } else {
             openEmptyCell(cellElement, cellId, table);
         }
@@ -43,8 +46,10 @@ export function clickOnCell(event){
 export function rightClickOnCell(e) {
     e.preventDefault();
 
-    let cellId = event.target.id;
+    let cellId = e.target.id;
     let cellElement = document.getElementById(cellId);
+
+    if (!table.tableCells[cellId] || table.won !== undefined) return;
 
     let haveFlag = table.tableCells[cellId].haveFlag;
 
@@ -89,9 +94,6 @@ function firstClick(table, cellElement, cellId){
     table.tableCells[cellId].firstClickOpen = true;
     table.tableCells[cellId].haveFlag = false;
     cellElement.style.backgroundImage = '';
-    cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
-    cellElement.removeEventListener('touchstart', onTouchStart,false);
-    cellElement.removeEventListener('touchend', onTouchEnd,false);
 
     let neighbors = table.tableCells[cellId].neighbors;
     for (const neighbor in neighbors){
@@ -173,9 +175,6 @@ function getNumberToCell(amountNeighborsWithMine, cellElement){
     cellElement.style.backgroundSize = "cover";
     cellElement.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
     cellElement.style.backgroundImage = urlImg;
-    cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
-    cellElement.removeEventListener('touchstart', onTouchStart,false);
-    cellElement.removeEventListener('touchend', onTouchEnd,false);
 }
 
 function openEmptyCell(cellElement, cellId, table){
@@ -183,9 +182,6 @@ function openEmptyCell(cellElement, cellId, table){
     table.tableCells[cellId].isOpen = true;
     table.tableCells[cellId].haveFlag = false;
     cellElement.style.backgroundImage = '';
-    cellElement.removeEventListener("contextmenu", rightClickOnCell, false);
-    cellElement.removeEventListener('touchstart', onTouchStart,false);
-    cellElement.removeEventListener('touchend', onTouchEnd,false);
     checkNeighborsWithNeighborsWithMine(table, cellId);
 }
 
@@ -232,14 +228,12 @@ function checkAndAddNumberCellsWithFlag() {
 }
 
 function getFlagToCell(cellElement, table, cellId){
-    cellElement.removeEventListener("click", clickOnCell);
     cellElement.style.backgroundSize = "cover";
     cellElement.style.backgroundImage = "url('./src/img/flag.png')";
     table.tableCells[cellId].haveFlag = true;
 }
 
 function removeFlagFromCell(cellElement, table, cellId){
-    cellElement.addEventListener("click", clickOnCell);
     cellElement.style.backgroundSize = "";
     cellElement.style.backgroundImage = "";
     table.tableCells[cellId].haveFlag = false;

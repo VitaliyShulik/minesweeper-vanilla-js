@@ -12,21 +12,21 @@
     <header>
             <label for="level">Level</label>
             <select title="Level will change after restart game" id="level">
-                <option title="8x8 and 10 mines" value="easy">Easy</option>
-                <option title="10x10 and 14 mines" value="normal">Normal</option>
-                <option title="12x12 and 20 mines" value="hard">Hard</option>
+                <option title="8x8 and 10 mines" value="8,8,10">Easy</option>
+                <option title="10x10 and 14 mines" value="10,10,14">Normal</option>
+                <option title="12x12 and 20 mines" value="12,12,20">Hard</option>
             </select>
             <button id="restart">Restart game</button>
             <p>
-                <span id="hours">00</span>
+                <span id="hours"></span>
                     : 
-                <span id="minutes">00</span>
+                <span id="minutes"></span>
                     : 
-                <span id="seconds">00</span>
+                <span id="seconds"></span>
             </p>
     
             <p>
-                <span id="counter-flags">0</span>
+                <span id="counter-flags"></span>
                     / 
                 <span id="amount-mines"></span>
             </p>    
